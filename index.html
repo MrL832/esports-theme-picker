@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build Battle Theme Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              gold: "0 0 30px rgba(255, 215, 0, 0.45), 0 0 80px rgba(245, 158, 11, 0.28)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top, rgba(251, 191, 36, 0.16), transparent 30%),
+          radial-gradient(circle at bottom, rgba(59, 130, 246, 0.12), transparent 35%),
+          linear-gradient(180deg, #09090b 0%, #111827 48%, #050816 100%);
+      }
+
+      .arena-grid {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+      }
+
+      .card-stage {
+        perspective: 1400px;
+      }
+
+      .pack-card {
+        transform-style: preserve-3d;
+        transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 350ms ease;
+      }
+
+      .pack-card.revealed {
+        transform: rotateY(180deg) scale(1.02);
+      }
+
+      .pack-face {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      .pack-back {
+        transform: rotateY(180deg);
+      }
+
+      .animate-shake {
+        animation: shake 180ms linear 10;
+      }
+
+      .flash-burst {
+        animation: flash-burst 700ms ease-out forwards;
+      }
+
+      .walkout-pulse {
+        animation: walkout-pulse 2200ms ease-in-out infinite;
+      }
+
+      .countdown-glow {
+        text-shadow:
+          0 0 10px rgba(251, 191, 36, 0.4),
+          0 0 22px rgba(250, 204, 21, 0.3),
+          0 0 38px rgba(248, 113, 113, 0.12);
+      }
+
+      @keyframes shake {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        10% { transform: translate(-10px, 7px) rotate(-1.8deg); }
+        20% { transform: translate(12px, -8px) rotate(1.9deg); }
+        30% { transform: translate(-14px, 10px) rotate(-2.4deg); }
+        40% { transform: translate(14px, -11px) rotate(2.1deg); }
+        50% { transform: translate(-12px, 6px) rotate(-1.7deg); }
+        60% { transform: translate(13px, -9px) rotate(1.8deg); }
+        70% { transform: translate(-9px, 8px) rotate(-1.3deg); }
+        80% { transform: translate(10px, -8px) rotate(1.4deg); }
+        90% { transform: translate(-8px, 6px) rotate(-1deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+      }
+
+      @keyframes flash-burst {
+        0% {
+          opacity: 0;
+          transform: scale(0.92);
+        }
+        10% {
+          opacity: 1;
+          transform: scale(1.03);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.28);
+        }
+      }
+
+      @keyframes walkout-pulse {
+        0%, 100% {
+          box-shadow:
+            0 0 26px rgba(250, 204, 21, 0.42),
+            0 0 72px rgba(250, 204, 21, 0.16);
+        }
+        50% {
+          box-shadow:
+            0 0 36px rgba(250, 204, 21, 0.72),
+            0 0 100px rgba(250, 204, 21, 0.36);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen overflow-hidden text-slate-100">
+    <div class="arena-grid pointer-events-none absolute inset-0"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-amber-300/10 to-transparent"></div>
+
+    <main class="relative flex min-h-screen flex-col">
+      <header class="flex items-center justify-between px-5 py-5 md:px-8">
+        <div>
+          <p class="text-xs uppercase tracking-[0.5em] text-amber-300/80">Build Battle</p>
+          <h1 class="mt-2 text-2xl font-black uppercase tracking-[0.2em] text-white md:text-3xl">
+            Theme Generator
+          </h1>
+        </div>
+        <button
+          id="fullscreenBtn"
+          class="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-amber-300/50 hover:bg-amber-300/15 focus:outline-none focus:ring-2 focus:ring-amber-300/50"
+          type="button"
+        >
+          Fullscreen
+        </button>
+      </header>
+
+      <section class="flex flex-1 flex-col items-center justify-center px-4 pb-10">
+        <p
+          id="statusText"
+          class="mb-7 text-center text-sm font-semibold uppercase tracking-[0.35em] text-amber-200/90 md:text-base"
+        >
+          Gold Pack ready. Click the card or press Spacebar.
+        </p>
+
+        <div class="card-stage relative w-full max-w-md md:max-w-lg">
+          <div
+            id="flashOverlay"
+            class="pointer-events-none absolute inset-[-10%] rounded-[2rem] bg-gradient-to-br from-yellow-200/90 via-amber-300/70 to-orange-500/45 opacity-0 blur-2xl"
+          ></div>
+
+          <button
+            id="packButton"
+            type="button"
+            aria-label="Open FUT style build theme pack"
+            class="group relative w-full rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-amber-300/40"
+          >
+            <div
+              id="packCard"
+              class="pack-card relative h-[31rem] rounded-[2rem] border border-white/10 bg-transparent shadow-gold md:h-[34rem]"
+            >
+              <article
+                class="pack-face absolute inset-0 overflow-hidden rounded-[2rem] border border-yellow-200/30 bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-700"
+              >
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.6),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(255,255,255,0.16),transparent_25%)]"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-white/35 via-transparent to-black/30"></div>
+                <div class="absolute inset-0 opacity-30">
+                  <div class="absolute inset-y-0 left-1/4 w-px bg-white/60"></div>
+                  <div class="absolute inset-y-0 right-1/4 w-px bg-white/40"></div>
+                  <div class="absolute inset-x-0 top-1/4 h-px bg-white/35"></div>
+                  <div class="absolute inset-x-0 bottom-1/4 h-px bg-white/35"></div>
+                </div>
+                <div class="relative flex h-full flex-col items-center justify-center px-7 text-center text-slate-950">
+                  <div class="mb-5 rounded-full border border-black/10 bg-black/10 px-4 py-1 text-xs font-black uppercase tracking-[0.45em] text-slate-900/85 md:text-sm">
+                    Ultimate Build Pack
+                  </div>
+                  <div class="mb-4 text-7xl drop-shadow-[0_12px_20px_rgba(255,255,255,0.35)] md:text-8xl">
+                    ✨
+                  </div>
+                  <h2 class="text-4xl font-black uppercase tracking-[0.14em] md:text-5xl">
+                    Gold Pack
+                  </h2>
+                  <p class="mt-5 max-w-xs text-sm font-bold uppercase tracking-[0.3em] text-slate-900/85 md:text-base">
+                    Click To Reveal
+                  </p>
+                  <p class="mt-6 rounded-full border border-black/10 bg-black/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-slate-900/80">
+                    Press Spacebar
+                  </p>
+                </div>
+              </article>
+
+              <article
+                class="pack-face pack-back absolute inset-0 overflow-hidden rounded-[2rem] border border-amber-200/25 bg-[linear-gradient(160deg,rgba(24,24,27,0.97),rgba(17,24,39,0.98),rgba(7,15,35,1))]"
+              >
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.35),transparent_34%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.22),transparent_38%)]"></div>
+                <div class="absolute inset-0 opacity-20">
+                  <div class="absolute inset-y-0 left-12 w-px bg-amber-300/30"></div>
+                  <div class="absolute inset-y-0 right-12 w-px bg-amber-300/20"></div>
+                  <div class="absolute inset-x-10 top-16 h-px bg-amber-200/25"></div>
+                  <div class="absolute inset-x-10 bottom-16 h-px bg-amber-200/20"></div>
+                </div>
+                <div
+                  id="revealGlow"
+                  class="walkout-pulse absolute inset-[10%] rounded-[1.7rem] border border-amber-300/20 bg-amber-300/5"
+                ></div>
+                <div class="relative flex h-full flex-col items-center justify-center px-8 text-center">
+                  <p class="text-xs font-bold uppercase tracking-[0.48em] text-amber-300/85 md:text-sm">
+                    Walkout Theme
+                  </p>
+                  <div
+                    id="themeEmoji"
+                    class="mt-6 text-7xl drop-shadow-[0_0_22px_rgba(250,204,21,0.35)] md:text-8xl"
+                  >
+                    🏟️
+                  </div>
+                  <h2
+                    id="themeName"
+                    class="mt-5 max-w-sm text-3xl font-black uppercase tracking-[0.14em] text-white md:text-4xl"
+                  >
+                    Theme Name
+                  </h2>
+                  <p
+                    id="themeSubtitle"
+                    class="mt-5 max-w-sm text-sm font-medium leading-6 text-slate-300 md:text-base"
+                  >
+                    A dramatic arena-ready build prompt appears here.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </button>
+        </div>
+
+        <section
+          id="controlsPanel"
+          class="mt-8 hidden w-full max-w-lg rounded-[1.5rem] border border-white/10 bg-white/5 px-5 py-5 shadow-2xl backdrop-blur md:px-6"
+        >
+          <div class="flex flex-col items-center gap-4">
+            <div
+              id="timerDisplay"
+              class="countdown-glow text-5xl font-black tabular-nums tracking-[0.25em] text-amber-200 md:text-6xl"
+            >
+              15:00
+            </div>
+            <p class="text-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-300/80">
+              Press Spacebar or Start Timer
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <button
+                id="startTimerBtn"
+                type="button"
+                class="rounded-full bg-amber-400 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
+              >
+                Start Timer
+              </button>
+              <button
+                id="resetBtn"
+                type="button"
+                class="rounded-full border border-white/15 bg-white/10 px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:border-rose-300/40 hover:bg-white/15"
+              >
+                Reset Pack
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const BUILD_THEMES = [
+        {
+          name: "Cyberpunk Metropolis",
+          emoji: "🌆",
+          subtitle: "Neon skyscrapers, hologram billboards, elevated rails, and rainy streets.",
+        },
+        {
+          name: "Ancient Dragon Lair",
+          emoji: "🐉",
+          subtitle: "Volcanic caverns, treasure piles, rune pillars, and a colossal dragon throne.",
+        },
+        {
+          name: "Underwater Lab",
+          emoji: "🌊",
+          subtitle: "Glass tunnels, glowing coral tech, pressure doors, and deep-sea research bays.",
+        },
+        {
+          name: "Sky Fortress Arena",
+          emoji: "☁️",
+          subtitle: "Floating platforms, turbine bridges, storm shields, and victory banners in the clouds.",
+        },
+        {
+          name: "Retro Arcade District",
+          emoji: "🕹️",
+          subtitle: "Pixel signs, glowing cabinets, bonus zones, and oversized arcade prizes.",
+        },
+        {
+          name: "Moonbase Hangar",
+          emoji: "🌕",
+          subtitle: "Launch pads, rover docks, airlocks, and panoramic crater-view windows.",
+        },
+        {
+          name: "Jungle Temple Run",
+          emoji: "🗿",
+          subtitle: "Vines, hidden traps, mossy chambers, and ancient glowing relics.",
+        },
+        {
+          name: "Robot Factory Clash",
+          emoji: "🤖",
+          subtitle: "Conveyor belts, assembly arms, molten steel channels, and warning lights.",
+        },
+        {
+          name: "Frozen Crystal Citadel",
+          emoji: "❄️",
+          subtitle: "Ice bridges, prism towers, aurora skies, and shimmering frozen halls.",
+        },
+        {
+          name: "Space Pirate Port",
+          emoji: "🚀",
+          subtitle: "Docked ships, contraband crates, neon taverns, and asteroid lookout decks.",
+        },
+      ];
+
+      const REVEAL_DURATION_MS = 1800;
+      const TIMER_DURATION_SECONDS = 15 * 60;
+
+      const statusText = document.getElementById("statusText");
+      const packButton = document.getElementById("packButton");
+      const packCard = document.getElementById("packCard");
+      const themeEmoji = document.getElementById("themeEmoji");
+      const themeName = document.getElementById("themeName");
+      const themeSubtitle = document.getElementById("themeSubtitle");
+      const controlsPanel = document.getElementById("controlsPanel");
+      const timerDisplay = document.getElementById("timerDisplay");
+      const startTimerBtn = document.getElementById("startTimerBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const fullscreenBtn = document.getElementById("fullscreenBtn");
+      const flashOverlay = document.getElementById("flashOverlay");
+
+      let audioContext;
+      let timerInterval = null;
+      let timeLeft = TIMER_DURATION_SECONDS;
+      let currentTheme = null;
+      let appState = "idle";
+
+      function ensureAudioContext() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        if (audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+      }
+
+      function createNoiseBuffer(seconds = 2) {
+        const frameCount = audioContext.sampleRate * seconds;
+        const buffer = audioContext.createBuffer(1, frameCount, audioContext.sampleRate);
+        const channelData = buffer.getChannelData(0);
+
+        for (let i = 0; i < frameCount; i += 1) {
+          channelData[i] = Math.random() * 2 - 1;
+        }
+
+        return buffer;
+      }
+
+      function playRumble(durationMs = REVEAL_DURATION_MS) {
+        ensureAudioContext();
+
+        const now = audioContext.currentTime;
+        const duration = durationMs / 1000;
+
+        const noiseSource = audioContext.createBufferSource();
+        noiseSource.buffer = createNoiseBuffer(duration + 0.3);
+
+        const noiseFilter = audioContext.createBiquadFilter();
+        noiseFilter.type = "lowpass";
+        noiseFilter.frequency.setValueAtTime(130, now);
+        noiseFilter.Q.setValueAtTime(1.8, now);
+
+        const noiseGain = audioContext.createGain();
+        noiseGain.gain.setValueAtTime(0.0001, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.14, now + 0.08);
+        noiseGain.gain.exponentialRampToValueAtTime(0.06, now + duration * 0.7);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        const subOsc = audioContext.createOscillator();
+        subOsc.type = "sawtooth";
+        subOsc.frequency.setValueAtTime(44, now);
+        subOsc.frequency.linearRampToValueAtTime(30, now + duration);
+
+        const subGain = audioContext.createGain();
+        subGain.gain.setValueAtTime(0.0001, now);
+        subGain.gain.exponentialRampToValueAtTime(0.08, now + 0.1);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        noiseSource.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(audioContext.destination);
+
+        subOsc.connect(subGain);
+        subGain.connect(audioContext.destination);
+
+        noiseSource.start(now);
+        noiseSource.stop(now + duration + 0.05);
+        subOsc.start(now);
+        subOsc.stop(now + duration + 0.05);
+      }
+
+      function playWalkoutBoom() {
+        ensureAudioContext();
+
+        const now = audioContext.currentTime;
+
+        const bassOsc = audioContext.createOscillator();
+        bassOsc.type = "triangle";
+        bassOsc.frequency.setValueAtTime(120, now);
+        bassOsc.frequency.exponentialRampToValueAtTime(38, now + 0.55);
+
+        const bassGain = audioContext.createGain();
+        bassGain.gain.setValueAtTime(0.0001, now);
+        bassGain.gain.exponentialRampToValueAtTime(0.45, now + 0.025);
+        bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+
+        const punchOsc = audioContext.createOscillator();
+        punchOsc.type = "square";
+        punchOsc.frequency.setValueAtTime(58, now);
+        punchOsc.frequency.exponentialRampToValueAtTime(28, now + 0.3);
+
+        const punchGain = audioContext.createGain();
+        punchGain.gain.setValueAtTime(0.0001, now);
+        punchGain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+        punchGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+        const sparkleOsc = audioContext.createOscillator();
+        sparkleOsc.type = "sine";
+        sparkleOsc.frequency.setValueAtTime(720, now + 0.03);
+        sparkleOsc.frequency.exponentialRampToValueAtTime(260, now + 0.55);
+
+        const sparkleGain = audioContext.createGain();
+        sparkleGain.gain.setValueAtTime(0.0001, now);
+        sparkleGain.gain.exponentialRampToValueAtTime(0.05, now + 0.04);
+        sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+
+        bassOsc.connect(bassGain);
+        punchOsc.connect(punchGain);
+        sparkleOsc.connect(sparkleGain);
+        bassGain.connect(audioContext.destination);
+        punchGain.connect(audioContext.destination);
+        sparkleGain.connect(audioContext.destination);
+
+        bassOsc.start(now);
+        punchOsc.start(now);
+        sparkleOsc.start(now);
+        bassOsc.stop(now + 0.8);
+        punchOsc.stop(now + 0.4);
+        sparkleOsc.stop(now + 0.65);
+      }
+
+      function playTimerExpiredAlert() {
+        ensureAudioContext();
+
+        const now = audioContext.currentTime;
+        [0, 0.24, 0.48].forEach((offset, index) => {
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          osc.type = index === 2 ? "square" : "sine";
+          osc.frequency.setValueAtTime(index === 2 ? 440 : 660, now + offset);
+          gain.gain.setValueAtTime(0.0001, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.16, now + offset + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.22);
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.24);
+        });
+      }
+
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function updateTimerDisplay() {
+        timerDisplay.textContent = formatTime(timeLeft);
+        if (timeLeft <= 10) {
+          timerDisplay.classList.add("text-rose-300");
+          timerDisplay.classList.remove("text-amber-200");
+        } else {
+          timerDisplay.classList.add("text-amber-200");
+          timerDisplay.classList.remove("text-rose-300");
+        }
+      }
+
+      function pickTheme() {
+        let nextTheme = BUILD_THEMES[Math.floor(Math.random() * BUILD_THEMES.length)];
+
+        if (BUILD_THEMES.length > 1 && currentTheme && nextTheme.name === currentTheme.name) {
+          const currentIndex = BUILD_THEMES.findIndex((theme) => theme.name === currentTheme.name);
+          nextTheme = BUILD_THEMES[(currentIndex + 1 + Math.floor(Math.random() * (BUILD_THEMES.length - 1))) % BUILD_THEMES.length];
+        }
+
+        currentTheme = nextTheme;
+        return nextTheme;
+      }
+
+      function clearTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function startTimer() {
+        if (appState !== "revealed" || timerInterval) {
+          return;
+        }
+
+        ensureAudioContext();
+        appState = "countdown";
+        startTimerBtn.disabled = true;
+        statusText.textContent = "Build timer live. 15 minutes on the clock.";
+
+        timerInterval = window.setInterval(() => {
+          timeLeft -= 1;
+          updateTimerDisplay();
+
+          if (timeLeft <= 0) {
+            clearTimer();
+            timeLeft = 0;
+            updateTimerDisplay();
+            playTimerExpiredAlert();
+            appState = "finished";
+            startTimerBtn.disabled = true;
+            statusText.textContent = "Time is up. Reset the pack for the next battle.";
+          }
+        }, 1000);
+      }
+
+      function triggerFlash() {
+        flashOverlay.classList.remove("flash-burst");
+        void flashOverlay.offsetWidth;
+        flashOverlay.classList.add("flash-burst");
+      }
+
+      function revealPack() {
+        if (appState !== "idle") {
+          return;
+        }
+
+        ensureAudioContext();
+        appState = "revealing";
+        statusText.textContent = "Pack is rumbling... stand by for the walkout.";
+        packCard.classList.add("animate-shake");
+        playRumble(REVEAL_DURATION_MS);
+
+        window.setTimeout(() => {
+          const theme = pickTheme();
+          themeEmoji.textContent = theme.emoji;
+          themeName.textContent = theme.name;
+          themeSubtitle.textContent = theme.subtitle;
+          packCard.classList.remove("animate-shake");
+          triggerFlash();
+          playWalkoutBoom();
+          packCard.classList.add("revealed");
+          controlsPanel.classList.remove("hidden");
+          timeLeft = TIMER_DURATION_SECONDS;
+          updateTimerDisplay();
+          startTimerBtn.disabled = false;
+          appState = "revealed";
+          statusText.textContent = "★ WALKOUT THEME REVEALED ★";
+        }, REVEAL_DURATION_MS);
+      }
+
+      function resetPack() {
+        clearTimer();
+        appState = "idle";
+        timeLeft = TIMER_DURATION_SECONDS;
+        updateTimerDisplay();
+        startTimerBtn.disabled = false;
+        controlsPanel.classList.add("hidden");
+        packCard.classList.remove("revealed", "animate-shake");
+        flashOverlay.classList.remove("flash-burst");
+        statusText.textContent = "Gold Pack ready. Click the card or press Spacebar.";
+      }
+
+      async function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          fullscreenBtn.textContent = "Exit Fullscreen";
+        } else {
+          await document.exitFullscreen();
+          fullscreenBtn.textContent = "Fullscreen";
+        }
+      }
+
+      packButton.addEventListener("click", () => {
+        if (appState === "idle") {
+          revealPack();
+        }
+      });
+
+      startTimerBtn.addEventListener("click", startTimer);
+      resetBtn.addEventListener("click", resetPack);
+      fullscreenBtn.addEventListener("click", () => {
+        toggleFullscreen().catch(() => {
+          statusText.textContent = "Fullscreen was blocked by the browser.";
+        });
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        fullscreenBtn.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.code !== "Space") {
+          return;
+        }
+
+        const tagName = document.activeElement?.tagName;
+        if (tagName === "INPUT" || tagName === "TEXTAREA") {
+          return;
+        }
+
+        event.preventDefault();
+
+        if (appState === "idle") {
+          revealPack();
+          return;
+        }
+
+        if (appState === "revealed") {
+          startTimer();
+        }
+      });
+
+      updateTimerDisplay();
+    </script>
+  </body>
+</html>
