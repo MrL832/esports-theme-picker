@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Build Battle Theme Generator</title>
+    <title>Minecraft Build Battle Theme Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             boxShadow: {
-              gold: "0 0 30px rgba(255, 215, 0, 0.45), 0 0 80px rgba(245, 158, 11, 0.28)",
+              gold: "0 0 30px rgba(74, 222, 128, 0.35), 0 0 80px rgba(34, 197, 94, 0.24)",
             },
           },
         },
@@ -23,9 +23,9 @@
 
       body {
         background:
-          radial-gradient(circle at top, rgba(251, 191, 36, 0.16), transparent 30%),
-          radial-gradient(circle at bottom, rgba(59, 130, 246, 0.12), transparent 35%),
-          linear-gradient(180deg, #09090b 0%, #111827 48%, #050816 100%);
+          radial-gradient(circle at top, rgba(74, 222, 128, 0.15), transparent 30%),
+          radial-gradient(circle at bottom, rgba(34, 197, 94, 0.12), transparent 35%),
+          linear-gradient(180deg, #0b1208 0%, #101813 48%, #060906 100%);
       }
 
       .arena-grid {
@@ -122,19 +122,19 @@
   </head>
   <body class="min-h-screen overflow-hidden text-slate-100">
     <div class="arena-grid pointer-events-none absolute inset-0"></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-amber-300/10 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-lime-300/10 to-transparent"></div>
 
     <main class="relative flex min-h-screen flex-col">
       <header class="flex items-center justify-between px-5 py-5 md:px-8">
         <div>
-          <p class="text-xs uppercase tracking-[0.5em] text-amber-300/80">Build Battle</p>
+          <p class="text-xs uppercase tracking-[0.5em] text-lime-300/80">Minecraft Build Battle</p>
           <h1 class="mt-2 text-2xl font-black uppercase tracking-[0.2em] text-white md:text-3xl">
             Theme Generator
           </h1>
         </div>
         <button
           id="fullscreenBtn"
-          class="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-amber-300/50 hover:bg-amber-300/15 focus:outline-none focus:ring-2 focus:ring-amber-300/50"
+          class="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-lime-300/50 hover:bg-lime-300/15 focus:outline-none focus:ring-2 focus:ring-lime-300/50"
           type="button"
         >
           Fullscreen
@@ -144,80 +144,80 @@
       <section class="flex flex-1 flex-col items-center justify-center px-4 pb-10">
         <p
           id="statusText"
-          class="mb-7 text-center text-sm font-semibold uppercase tracking-[0.35em] text-amber-200/90 md:text-base"
+          class="mb-7 text-center text-sm font-semibold uppercase tracking-[0.35em] text-lime-200/90 md:text-base"
         >
-          Gold Pack ready. Click the card or press Spacebar.
+          Mystery crate ready. Click the card or press Spacebar.
         </p>
 
         <div class="card-stage relative w-full max-w-md md:max-w-lg">
           <div
             id="flashOverlay"
-            class="pointer-events-none absolute inset-[-10%] rounded-[2rem] bg-gradient-to-br from-yellow-200/90 via-amber-300/70 to-orange-500/45 opacity-0 blur-2xl"
+            class="pointer-events-none absolute inset-[-10%] rounded-[2rem] bg-gradient-to-br from-lime-200/80 via-emerald-300/65 to-green-500/45 opacity-0 blur-2xl"
           ></div>
 
           <button
             id="packButton"
             type="button"
-            aria-label="Open FUT style build theme pack"
-            class="group relative w-full rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-amber-300/40"
+            aria-label="Open Minecraft build theme crate"
+            class="group relative w-full rounded-[2rem] focus:outline-none focus:ring-4 focus:ring-lime-300/40"
           >
             <div
               id="packCard"
               class="pack-card relative h-[31rem] rounded-[2rem] border border-white/10 bg-transparent shadow-gold md:h-[34rem]"
             >
               <article
-                class="pack-face absolute inset-0 overflow-hidden rounded-[2rem] border border-yellow-200/30 bg-gradient-to-br from-yellow-200 via-amber-400 to-yellow-700"
+                class="pack-face absolute inset-0 overflow-hidden rounded-[2rem] border border-lime-200/20 bg-[linear-gradient(135deg,#6b4423_0%,#6b4423_18%,#7f5530_18%,#7f5530_36%,#5a8d3e_36%,#5a8d3e_54%,#6aa84f_54%,#6aa84f_72%,#7f5530_72%,#7f5530_88%,#5b3a1f_88%,#5b3a1f_100%)]"
               >
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.6),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(255,255,255,0.16),transparent_25%)]"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-white/35 via-transparent to-black/30"></div>
-                <div class="absolute inset-0 opacity-30">
-                  <div class="absolute inset-y-0 left-1/4 w-px bg-white/60"></div>
-                  <div class="absolute inset-y-0 right-1/4 w-px bg-white/40"></div>
-                  <div class="absolute inset-x-0 top-1/4 h-px bg-white/35"></div>
-                  <div class="absolute inset-x-0 bottom-1/4 h-px bg-white/35"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(255,255,255,0.08),transparent_25%)]"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/35"></div>
+                <div class="absolute inset-0 opacity-35">
+                  <div class="absolute inset-y-0 left-1/4 w-1 bg-black/15"></div>
+                  <div class="absolute inset-y-0 right-1/4 w-1 bg-black/15"></div>
+                  <div class="absolute inset-x-0 top-1/4 h-1 bg-black/10"></div>
+                  <div class="absolute inset-x-0 bottom-1/4 h-1 bg-black/10"></div>
                 </div>
-                <div class="relative flex h-full flex-col items-center justify-center px-7 text-center text-slate-950">
-                  <div class="mb-5 rounded-full border border-black/10 bg-black/10 px-4 py-1 text-xs font-black uppercase tracking-[0.45em] text-slate-900/85 md:text-sm">
-                    Ultimate Build Pack
+                <div class="relative flex h-full flex-col items-center justify-center px-7 text-center text-stone-100">
+                  <div class="mb-5 rounded-full border border-black/20 bg-black/20 px-4 py-1 text-xs font-black uppercase tracking-[0.45em] text-lime-100/90 md:text-sm">
+                    Mystery Build Crate
                   </div>
-                  <div class="mb-4 text-7xl drop-shadow-[0_12px_20px_rgba(255,255,255,0.35)] md:text-8xl">
-                    ✨
+                  <div class="mb-4 text-7xl drop-shadow-[0_12px_20px_rgba(134,239,172,0.35)] md:text-8xl">
+                    ⛏️
                   </div>
                   <h2 class="text-4xl font-black uppercase tracking-[0.14em] md:text-5xl">
-                    Gold Pack
+                    Block Crate
                   </h2>
-                  <p class="mt-5 max-w-xs text-sm font-bold uppercase tracking-[0.3em] text-slate-900/85 md:text-base">
+                  <p class="mt-5 max-w-xs text-sm font-bold uppercase tracking-[0.3em] text-lime-100/85 md:text-base">
                     Click To Reveal
                   </p>
-                  <p class="mt-6 rounded-full border border-black/10 bg-black/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-slate-900/80">
+                  <p class="mt-6 rounded-full border border-black/20 bg-black/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-lime-100/80">
                     Press Spacebar
                   </p>
                 </div>
               </article>
 
               <article
-                class="pack-face pack-back absolute inset-0 overflow-hidden rounded-[2rem] border border-amber-200/25 bg-[linear-gradient(160deg,rgba(24,24,27,0.97),rgba(17,24,39,0.98),rgba(7,15,35,1))]"
+                class="pack-face pack-back absolute inset-0 overflow-hidden rounded-[2rem] border border-lime-200/20 bg-[linear-gradient(160deg,rgba(15,23,11,0.97),rgba(17,36,18,0.98),rgba(6,12,7,1))]"
               >
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.35),transparent_34%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.22),transparent_38%)]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(134,239,172,0.28),transparent_34%),radial-gradient(circle_at_bottom,rgba(74,222,128,0.2),transparent_38%)]"></div>
                 <div class="absolute inset-0 opacity-20">
-                  <div class="absolute inset-y-0 left-12 w-px bg-amber-300/30"></div>
-                  <div class="absolute inset-y-0 right-12 w-px bg-amber-300/20"></div>
-                  <div class="absolute inset-x-10 top-16 h-px bg-amber-200/25"></div>
-                  <div class="absolute inset-x-10 bottom-16 h-px bg-amber-200/20"></div>
+                  <div class="absolute inset-y-0 left-12 w-px bg-lime-300/30"></div>
+                  <div class="absolute inset-y-0 right-12 w-px bg-lime-300/20"></div>
+                  <div class="absolute inset-x-10 top-16 h-px bg-lime-200/25"></div>
+                  <div class="absolute inset-x-10 bottom-16 h-px bg-lime-200/20"></div>
                 </div>
                 <div
                   id="revealGlow"
-                  class="walkout-pulse absolute inset-[10%] rounded-[1.7rem] border border-amber-300/20 bg-amber-300/5"
+                  class="walkout-pulse absolute inset-[10%] rounded-[1.7rem] border border-lime-300/20 bg-lime-300/5"
                 ></div>
                 <div class="relative flex h-full flex-col items-center justify-center px-8 text-center">
-                  <p class="text-xs font-bold uppercase tracking-[0.48em] text-amber-300/85 md:text-sm">
-                    Walkout Theme
+                  <p class="text-xs font-bold uppercase tracking-[0.48em] text-lime-300/85 md:text-sm">
+                    Minecraft Theme
                   </p>
                   <div
                     id="themeEmoji"
-                    class="mt-6 text-7xl drop-shadow-[0_0_22px_rgba(250,204,21,0.35)] md:text-8xl"
+                    class="mt-6 text-7xl drop-shadow-[0_0_22px_rgba(134,239,172,0.35)] md:text-8xl"
                   >
-                    🏟️
+                    🧱
                   </div>
                   <h2
                     id="themeName"
@@ -229,7 +229,7 @@
                     id="themeSubtitle"
                     class="mt-5 max-w-sm text-sm font-medium leading-6 text-slate-300 md:text-base"
                   >
-                    A dramatic arena-ready build prompt appears here.
+                    A quick Minecraft build prompt for three teammates appears here.
                   </p>
                 </div>
               </article>
@@ -244,9 +244,9 @@
           <div class="flex flex-col items-center gap-4">
             <div
               id="timerDisplay"
-              class="countdown-glow text-5xl font-black tabular-nums tracking-[0.25em] text-amber-200 md:text-6xl"
+              class="countdown-glow text-5xl font-black tabular-nums tracking-[0.25em] text-lime-200 md:text-6xl"
             >
-              15:00
+              30:00
             </div>
             <p class="text-center text-xs font-semibold uppercase tracking-[0.3em] text-slate-300/80">
               Press Spacebar or Start Timer
@@ -255,7 +255,7 @@
               <button
                 id="startTimerBtn"
                 type="button"
-                class="rounded-full bg-amber-400 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
+                class="rounded-full bg-lime-400 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-lime-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-300"
               >
                 Start Timer
               </button>
@@ -275,59 +275,59 @@
     <script>
       const BUILD_THEMES = [
         {
-          name: "Cyberpunk Metropolis",
-          emoji: "🌆",
-          subtitle: "Neon skyscrapers, hologram billboards, elevated rails, and rainy streets.",
+          name: "Starter Village",
+          emoji: "🏡",
+          subtitle: "Build 3 small houses, a path, and a shared town center that three teammates can split up fast.",
         },
         {
-          name: "Ancient Dragon Lair",
-          emoji: "🐉",
-          subtitle: "Volcanic caverns, treasure piles, rune pillars, and a colossal dragon throne.",
+          name: "Castle Gate",
+          emoji: "🏰",
+          subtitle: "Make a castle entrance with towers, a gate, and flags so each player owns one section.",
         },
         {
-          name: "Underwater Lab",
-          emoji: "🌊",
-          subtitle: "Glass tunnels, glowing coral tech, pressure doors, and deep-sea research bays.",
+          name: "Animal Barn",
+          emoji: "🐷",
+          subtitle: "Create a cute barn, fenced pens, and a hay yard with simple shapes and bright details.",
         },
         {
-          name: "Sky Fortress Arena",
-          emoji: "☁️",
-          subtitle: "Floating platforms, turbine bridges, storm shields, and victory banners in the clouds.",
+          name: "Pirate Ship",
+          emoji: "🏴‍☠️",
+          subtitle: "Build a medium ship with sails, deck details, and a tiny dock for a fun team project.",
         },
         {
-          name: "Retro Arcade District",
-          emoji: "🕹️",
-          subtitle: "Pixel signs, glowing cabinets, bonus zones, and oversized arcade prizes.",
+          name: "Treehouse Camp",
+          emoji: "🌳",
+          subtitle: "Design 3 connected treehouses with rope bridges, lanterns, and a campfire below.",
         },
         {
-          name: "Moonbase Hangar",
-          emoji: "🌕",
-          subtitle: "Launch pads, rover docks, airlocks, and panoramic crater-view windows.",
+          name: "Wizard Tower",
+          emoji: "🧙",
+          subtitle: "Create a magical tower, potion room, and crystal garden with simple fantasy details.",
         },
         {
-          name: "Jungle Temple Run",
-          emoji: "🗿",
-          subtitle: "Vines, hidden traps, mossy chambers, and ancient glowing relics.",
+          name: "Mini Aquarium",
+          emoji: "🐠",
+          subtitle: "Build a glass aquarium with fish, sea plants, and a visitor path around it.",
         },
         {
-          name: "Robot Factory Clash",
-          emoji: "🤖",
-          subtitle: "Conveyor belts, assembly arms, molten steel channels, and warning lights.",
+          name: "Nether Outpost",
+          emoji: "🔥",
+          subtitle: "Make a small fortress with lava, blackstone walls, and a glowing portal centerpiece.",
         },
         {
-          name: "Frozen Crystal Citadel",
+          name: "Snowy Lodge",
           emoji: "❄️",
-          subtitle: "Ice bridges, prism towers, aurora skies, and shimmering frozen halls.",
+          subtitle: "Build a cozy cabin, snowman, and hot cocoa area for an easy winter team build.",
         },
         {
-          name: "Space Pirate Port",
-          emoji: "🚀",
-          subtitle: "Docked ships, contraband crates, neon taverns, and asteroid lookout decks.",
+          name: "Redstone Workshop",
+          emoji: "⚙️",
+          subtitle: "Create a fun inventor lab with benches, gears, and simple redstone-inspired machines.",
         },
       ];
 
       const REVEAL_DURATION_MS = 1800;
-      const TIMER_DURATION_SECONDS = 15 * 60;
+      const TIMER_DURATION_SECONDS = 30 * 60;
 
       const statusText = document.getElementById("statusText");
       const packButton = document.getElementById("packButton");
@@ -526,7 +526,7 @@
         ensureAudioContext();
         appState = "countdown";
         startTimerBtn.disabled = true;
-        statusText.textContent = "Build timer live. 15 minutes on the clock.";
+        statusText.textContent = "Build timer live. 30 minutes on the clock.";
 
         timerInterval = window.setInterval(() => {
           timeLeft -= 1;
@@ -557,7 +557,7 @@
 
         ensureAudioContext();
         appState = "revealing";
-        statusText.textContent = "Pack is rumbling... stand by for the walkout.";
+        statusText.textContent = "Mystery crate is rumbling... stand by for the reveal.";
         packCard.classList.add("animate-shake");
         playRumble(REVEAL_DURATION_MS);
 
@@ -575,7 +575,7 @@
           updateTimerDisplay();
           startTimerBtn.disabled = false;
           appState = "revealed";
-          statusText.textContent = "★ WALKOUT THEME REVEALED ★";
+          statusText.textContent = "★ MINECRAFT BUILD THEME REVEALED ★";
         }, REVEAL_DURATION_MS);
       }
 
@@ -588,7 +588,7 @@
         controlsPanel.classList.add("hidden");
         packCard.classList.remove("revealed", "animate-shake");
         flashOverlay.classList.remove("flash-burst");
-        statusText.textContent = "Gold Pack ready. Click the card or press Spacebar.";
+        statusText.textContent = "Mystery crate ready. Click the card or press Spacebar.";
       }
 
       async function toggleFullscreen() {
