@@ -1,1 +1,136 @@
-First readme file draft
+# Minecraft Build Battle Theme Generator
+
+A single-file HTML web app for running a dramatic Minecraft-themed Build Battle reveal on a big screen, projector, or stream.
+
+It opens with a mystery crate animation, reveals a random Minecraft build theme, and then starts a 30-minute countdown for the round.
+
+## Features
+
+- Single-file app: just `index.html`
+- Minecraft-themed mystery crate reveal
+- Random kid-friendly build themes for a team of 3
+- 30-minute build timer
+- Click or `Spacebar` controls
+- Synthesized sound effects using the Web Audio API
+- Fullscreen mode for arena/projector display
+- No build step required
+- Tailwind via CDN, vanilla JavaScript, pure HTML
+
+## How It Works
+
+1. Open the app in a browser.
+2. Click the crate or press `Spacebar` to reveal a random theme.
+3. After the reveal, click `Start Timer` or press `Spacebar` again.
+4. The 30-minute countdown begins.
+5. Click `Reset Pack` to prepare the next round.
+
+## Controls
+
+- `Click crate`: reveal the theme
+- `Spacebar`: reveal the theme, then start the timer
+- `Start Timer`: begin the 30-minute countdown
+- `Reset Pack`: reset for the next round
+- `Fullscreen`: enter presentation mode
+
+## Theme Style
+
+The app is designed for:
+- Minecraft arena presentations
+- esports or school events
+- team-of-3 players
+- 10-year-old builders
+- fast, fun 30-minute build battles
+
+## Included Theme Examples
+
+- Starter Village
+- Castle Gate
+- Animal Barn
+- Pirate Ship
+- Treehouse Camp
+- Wizard Tower
+- Mini Aquarium
+- Nether Outpost
+- Snowy Lodge
+- Redstone Workshop
+
+## Project Structure
+
+## Project Structure
+
+```text
+.
+├── index.html
+└── README.md
+```
+
+## Run Locally
+
+Because this is a static HTML app, you can open it directly in a browser:
+
+```bash
+open index.html
+```
+
+Or serve it locally with Python:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then visit:
+
+```text
+http://localhost:8000
+```
+
+## Editing Themes
+
+The theme list is stored in the `BUILD_THEMES` array inside `index.html`.
+
+Each theme uses this structure:
+
+```js
+{
+  name: "Starter Village",
+  emoji: "🏡",
+  subtitle: "Build 3 small houses, a path, and a shared town center that three teammates can split up fast."
+}
+```
+
+You can add, remove, or replace themes to suit your event.
+
+## Tech Stack
+
+- HTML5
+- Tailwind CSS via CDN
+- Vanilla JavaScript
+- Web Audio API
+
+## Browser Notes
+
+- Sound effects only play after user interaction
+- Fullscreen support depends on browser permissions
+- Best experienced in a modern Chromium, Edge, Safari, or Firefox browser
+
+## Use Cases
+
+- School Minecraft clubs
+- esports stage events
+- classroom build battles
+- youth coding/game design events
+- screen-shared challenge generators
+
+## Future Ideas
+
+- More theme packs
+- Difficulty levels
+- Team name input
+- Judge scoring overlay
+- Animated pixel font styling
+- Category filters
+- Round history
+
+## License
+
+Add your preferred license here.
